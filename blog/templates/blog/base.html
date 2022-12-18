@@ -16,14 +16,14 @@
     {% if title %}
         <title>Блог клуба {{ title }}</title>
     {% else %}
-        <title>Блог клуба Python </title>
+        <title>Блог клуба Python Bytes</title>
     {% endif %}
 </head>
 <body>
     <header class="site-header">
       <nav class="navbar navbar-expand-md navbar-dark bg-blue fixed-top">
         <div class="container">
-          <a class="navbar-brand mr-4" href="{% url 'blog-home' %}"><i class='bx bxs-rocket bx-tada-hover'></i> Python</a>
+          <a class="navbar-brand mr-4" href="{% url 'blog-home' %}"><i class='bx bxs-rocket bx-tada-hover'></i> Python Bytes</a>
           <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarToggle" aria-controls="navbarToggle" aria-expanded="false" aria-label="Toggle navigation">
           <span class="navbar-toggler-icon"></span>
           </button>
@@ -34,8 +34,13 @@
             </div>
             <!-- Правая часть навигационной панели -->
             <div class="navbar-nav">
-              <a class="nav-item nav-link" href="#">Вход</a>
-              <a class="nav-item nav-link" href="#">Регистрация</a>
+              {% if user.is_authenticated %}
+                <a class="nav-item nav-link" href="{% url 'profile' %}">Профиль</a>
+                <a class="nav-item nav-link" href="{% url 'logout' %}">Выход</a>
+              {% else %}
+                <a class="nav-item nav-link" href="{% url 'login' %}">Вход</a>
+                <a class="nav-item nav-link" href="{% url 'register' %}">Регистрация</a>
+              {% endif %}
             </div>
           </div>
         </div>
@@ -44,6 +49,13 @@
     <main role="main" class="container">
       <div class="row">
         <div class="col-md-8">
+          {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+              </div>
+            {% endfor %}
+          {% endif %}
           {% block content %}{% endblock %}
         </div>
         <div class="col-md-4">
